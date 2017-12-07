@@ -38,6 +38,7 @@ module.exports = function(opts, callback) {
 
   // load and register tilelive modules
   require("tilelive-modules/loader")(tilelive, opts);
+  require('tilelive-postgis').registerProtocols(tilelive, opts);
 
   if (process.env.NODE_ENV !== "production") {
     // TODO configurable logging per-style
