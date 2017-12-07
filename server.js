@@ -27,6 +27,7 @@ var serve = require("./lib/app"),
 debug = debug("tessera");
 
 module.exports = function(opts, callback) {
+  console.log('Test')
   var app = express().disable("x-powered-by"),
       tilelive = require("tilelive-cache")(require("@mapbox/tilelive"), {
         size: process.env.CACHE_SIZE || opts.cacheSize,
