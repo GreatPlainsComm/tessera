@@ -5,7 +5,15 @@
 process.env.UV_THREADPOOL_SIZE = process.env.UV_THREADPOOL_SIZE || Math.ceil(Math.max(4, require('os').cpus().length * 1.5));
 
 var fs = require("fs"),
-    path = require("path");
+    path = require("path"),
+    https = require('https');
+
+    var options = {
+        key: fs.readFileSync('./ssl/privatekey.pem'),
+        cert: fs.readFileSync('./ssl/certificate.pem'),
+    };
+
+
 
 var cors = require("cors"),
     debug = require("debug"),
@@ -128,7 +136,8 @@ module.exports = function(opts, callback) {
   }
 
   var handler = process.env.SOCKET || opts.socket || process.env.PORT || opts.port;
-  var server = app.listen(handler, process.env.HOST || opts.bind, function() {
+
+  var server = https.createServer(options, app).listen(handler, process.env.HOST || opts.bind, function(){
     var endpoint;
     if (opts.socket) {
       endpoint = opts.socket;
@@ -148,6 +157,27 @@ module.exports = function(opts, callback) {
     return callback();
   });
 
+  /*
+  var server = app.listen(handler, process.env.HOST || opts.bind, function() {
+    var endpoint;
+    if (opts.socket) {
+      endpoint = opts.socket;
+
+      // allow the socket to be accessed by other users/groups
+      fs.chmodSync(opts.socket, "1766");
+    } else if (process.env.SOCKET) {
+      endpoint = process.env.SOCKET;
+
+      // allow the socket to be accessed by other users/groups
+      fs.chmodSync(opts.socket, "1766");
+    } else {
+      endpoint = "http://" + this.address().address + ':' + this.address().port;
+    }
+    console.log("Listening at %s", endpoint);
+
+    return callback();
+  });
+*/
   process.on('SIGINT', function () {
     console.warn('Caught SIGINT, terminating');
     server.close();
