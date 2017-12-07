@@ -9,8 +9,8 @@ var fs = require("fs"),
     https = require('https');
 
     var options = {
-        key: fs.readFileSync('./ssl/privatekey.pem'),
-        cert: fs.readFileSync('./ssl/certificate.pem'),
+        key: fs.readFileSync('/home/cjones/tessera/t/ssl/privatekey.pem'),
+        cert: fs.readFileSync('/home/cjones/tessera/t/ssl/certificate.pem'),
     };
 
 
